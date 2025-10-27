@@ -1,0 +1,1670 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Gestão de Gastos Domésticos",
+    "description": "API Rest para gerenciar gastos domésticos mensais, incluindo despesas fixas, variáveis, receitas e pagamentos",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Servidor de desenvolvimento"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único do usuário"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do usuário"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email do usuário"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização"
+          }
+        }
+      },
+      "FixedExpense": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único da despesa"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da despesa fixa"
+          },
+          "value": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor da despesa"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pendente", "OK", "Pago"],
+            "description": "Status da despesa"
+          },
+          "paidValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor já pago"
+          },
+          "remainingValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor restante a pagar"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização"
+          }
+        }
+      },
+      "VariableExpense": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único da despesa"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da despesa variável"
+          },
+          "value": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor da despesa"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pendente", "OK", "Pago"],
+            "description": "Status da despesa"
+          },
+          "paidValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor já pago"
+          },
+          "remainingValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor restante a pagar"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização"
+          }
+        }
+      },
+      "Revenue": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único da receita"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do usuário proprietário"
+          },
+          "currentValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor atual da receita"
+          },
+          "previousValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor anterior da receita"
+          },
+          "usedValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor já utilizado"
+          },
+          "availableValue": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor disponível"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização"
+          }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único do pagamento"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID do usuário que fez o pagamento"
+          },
+          "expenseId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID da despesa"
+          },
+          "expenseType": {
+            "type": "string",
+            "enum": ["fixed", "variable"],
+            "description": "Tipo da despesa"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Valor do pagamento"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do pagamento"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data do pagamento"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização"
+          }
+        }
+      },
+      "FinancialSummary": {
+        "type": "object",
+        "properties": {
+          "fixedExpenses": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "format": "float",
+                "description": "Total de despesas fixas"
+              },
+              "paid": {
+                "type": "number",
+                "format": "float",
+                "description": "Total pago em despesas fixas"
+              },
+              "remaining": {
+                "type": "number",
+                "format": "float",
+                "description": "Valor restante das despesas fixas"
+              }
+            }
+          },
+          "variableExpenses": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "format": "float",
+                "description": "Total de despesas variáveis"
+              },
+              "paid": {
+                "type": "number",
+                "format": "float",
+                "description": "Total pago em despesas variáveis"
+              },
+              "remaining": {
+                "type": "number",
+                "format": "float",
+                "description": "Valor restante das despesas variáveis"
+              }
+            }
+          },
+          "totalExpenses": {
+            "type": "number",
+            "format": "float",
+            "description": "Total de todas as despesas"
+          },
+          "totalPaid": {
+            "type": "number",
+            "format": "float",
+            "description": "Total pago"
+          },
+          "totalToPay": {
+            "type": "number",
+            "format": "float",
+            "description": "Total a pagar"
+          },
+          "totalRevenue": {
+            "type": "number",
+            "format": "float",
+            "description": "Total de receitas"
+          },
+          "finalSituation": {
+            "type": "number",
+            "format": "float",
+            "description": "Situação final (receitas - despesas)"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem de erro"
+          },
+          "error": {
+            "type": "string",
+            "description": "Código do erro"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso"
+          },
+          "data": {
+            "type": "object",
+            "description": "Dados da resposta"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Verificar status da API",
+        "description": "Endpoint para verificar se a API está funcionando",
+        "responses": {
+          "200": {
+            "description": "API funcionando",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "API está funcionando"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Registrar novo usuário",
+        "description": "Cria um novo usuário no sistema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "João Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "user": {
+                              "$ref": "#/components/schemas/User"
+                            },
+                            "token": {
+                              "type": "string",
+                              "description": "Token JWT para autenticação"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Fazer login",
+        "description": "Autentica um usuário e retorna um token JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "user": {
+                              "$ref": "#/components/schemas/User"
+                            },
+                            "token": {
+                              "type": "string",
+                              "description": "Token JWT para autenticação"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Obter perfil do usuário",
+        "description": "Retorna os dados do usuário autenticado",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Perfil obtido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Atualizar perfil do usuário",
+        "description": "Atualiza os dados do usuário autenticado",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "João Silva Santos"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao.santos@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Perfil atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Deletar perfil do usuário",
+        "description": "Remove o usuário autenticado e todos os seus dados",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Usuário deletado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/fixed": {
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Criar despesa fixa",
+        "description": "Cria uma nova despesa fixa",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "value"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "Carro"
+                  },
+                  "value": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "example": 1000.00
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Pendente", "OK", "Pago"],
+                    "default": "Pendente",
+                    "example": "Pendente"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Despesa fixa criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FixedExpense"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Listar despesas fixas",
+        "description": "Retorna todas as despesas fixas",
+        "responses": {
+          "200": {
+            "description": "Lista de despesas fixas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/FixedExpense"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/fixed/{id}": {
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Obter despesa fixa por ID",
+        "description": "Retorna uma despesa fixa específica",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID da despesa fixa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Despesa fixa encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FixedExpense"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Despesa fixa não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Expenses"],
+        "summary": "Atualizar despesa fixa",
+        "description": "Atualiza uma despesa fixa existente",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID da despesa fixa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "value"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "Carro"
+                  },
+                  "value": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "example": 1200.00
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Pendente", "OK", "Pago"],
+                    "example": "OK"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Despesa fixa atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FixedExpense"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Despesa fixa não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Expenses"],
+        "summary": "Deletar despesa fixa",
+        "description": "Remove uma despesa fixa e todos os pagamentos relacionados",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID da despesa fixa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Despesa fixa deletada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Despesa fixa não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/variable": {
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Criar despesa variável",
+        "description": "Cria uma nova despesa variável",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "value"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "Plano de Saúde"
+                  },
+                  "value": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "example": 500.00
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Pendente", "OK", "Pago"],
+                    "default": "Pendente",
+                    "example": "Pendente"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Despesa variável criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/VariableExpense"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Listar despesas variáveis",
+        "description": "Retorna todas as despesas variáveis",
+        "responses": {
+          "200": {
+            "description": "Lista de despesas variáveis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/VariableExpense"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/payment": {
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Processar pagamento",
+        "description": "Processa um pagamento para uma despesa (fixa ou variável)",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["expenseId", "expenseType", "amount"],
+                "properties": {
+                  "expenseId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "ID da despesa",
+                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                  },
+                  "expenseType": {
+                    "type": "string",
+                    "enum": ["fixed", "variable"],
+                    "description": "Tipo da despesa",
+                    "example": "fixed"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0.01,
+                    "description": "Valor do pagamento",
+                    "example": 500.00
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do pagamento",
+                    "example": "Pagamento parcial da mensalidade"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pagamento processado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "payment": {
+                              "$ref": "#/components/schemas/Payment"
+                            },
+                            "expense": {
+                              "oneOf": [
+                                {"$ref": "#/components/schemas/FixedExpense"},
+                                {"$ref": "#/components/schemas/VariableExpense"}
+                              ]
+                            },
+                            "remainingRevenue": {
+                              "type": "number",
+                              "format": "float",
+                              "description": "Receita restante do usuário"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou receita insuficiente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/summary": {
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Obter resumo financeiro",
+        "description": "Retorna o resumo financeiro completo com totais de despesas, pagamentos e situação final",
+        "responses": {
+          "200": {
+            "description": "Resumo financeiro obtido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FinancialSummary"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revenues": {
+      "post": {
+        "tags": ["Revenues"],
+        "summary": "Criar receita",
+        "description": "Cria uma receita para o usuário autenticado",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["currentValue"],
+                "properties": {
+                  "currentValue": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "description": "Valor atual da receita",
+                    "example": 2000.00
+                  },
+                  "previousValue": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "description": "Valor anterior da receita",
+                    "example": 4000.00
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Receita criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Revenue"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou usuário já possui receita",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Revenues"],
+        "summary": "Obter receita do usuário",
+        "description": "Retorna a receita do usuário autenticado",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Receita obtida com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Revenue"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Receita não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Revenues"],
+        "summary": "Atualizar receita",
+        "description": "Atualiza a receita do usuário autenticado",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["currentValue"],
+                "properties": {
+                  "currentValue": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "description": "Novo valor atual da receita",
+                    "example": 2500.00
+                  },
+                  "previousValue": {
+                    "type": "number",
+                    "format": "float",
+                    "minimum": 0,
+                    "description": "Novo valor anterior da receita",
+                    "example": 2000.00
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Receita atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Revenue"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Receita não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Revenues"],
+        "summary": "Deletar receita",
+        "description": "Remove a receita do usuário autenticado (apenas se não houver valores utilizados)",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Receita deletada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Não é possível deletar receita com valores utilizados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Receita não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "tags": ["Payments"],
+        "summary": "Listar pagamentos",
+        "description": "Retorna lista de pagamentos com filtros opcionais",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filtrar por ID do usuário"
+          },
+          {
+            "name": "expenseId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filtrar por ID da despesa"
+          },
+          {
+            "name": "expenseType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["fixed", "variable"]
+            },
+            "description": "Filtrar por tipo de despesa"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filtrar por data inicial (YYYY-MM-DD)"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filtrar por data final (YYYY-MM-DD)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pagamentos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Payment"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/summary": {
+      "get": {
+        "tags": ["Payments"],
+        "summary": "Obter resumo de pagamentos",
+        "description": "Retorna estatísticas e resumo dos pagamentos",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filtrar por ID do usuário"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resumo de pagamentos obtido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "totalPayments": {
+                              "type": "integer",
+                              "description": "Total de pagamentos"
+                            },
+                            "totalAmount": {
+                              "type": "number",
+                              "format": "float",
+                              "description": "Valor total dos pagamentos"
+                            },
+                            "byExpenseType": {
+                              "type": "object",
+                              "properties": {
+                                "fixed": {
+                                  "type": "number",
+                                  "format": "float"
+                                },
+                                "variable": {
+                                  "type": "number",
+                                  "format": "float"
+                                }
+                              }
+                            },
+                            "byMonth": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "description": "Pagamentos agrupados por mês (YYYY-MM)"
+                            },
+                            "averagePayment": {
+                              "type": "number",
+                              "format": "float",
+                              "description": "Valor médio dos pagamentos"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
