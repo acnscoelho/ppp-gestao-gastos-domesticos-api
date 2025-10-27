@@ -257,6 +257,74 @@ curl -X GET http://localhost:3000/api/expenses/summary
 }
 ```
 
+## 🔧 Configuração
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=sua_chave_secreta_super_segura_2024
+```
+
+### Banco de Dados
+
+O projeto utiliza um banco de dados em memória, ou seja, os dados são perdidos quando o servidor é reiniciado. Para persistência, você pode:
+
+1. Implementar um banco de dados real (MongoDB, PostgreSQL, etc.)
+2. Adicionar persistência em arquivo JSON
+3. Usar um banco de dados SQLite
+
+## 🧪 Testando a API
+
+### Health Check
+```bash
+curl -X GET http://localhost:3000/api/health
+```
+
+### Fluxo Completo de Teste
+
+1. **Registrar usuário**
+2. **Fazer login e obter token**
+3. **Criar receita**
+4. **Criar despesas fixas e variáveis**
+5. **Processar pagamentos**
+6. **Verificar resumo financeiro**
+
+## 📝 Regras de Negócio
+
+1. **Autenticação**: Usuários devem estar autenticados para criar/editar dados
+2. **Receita**: Cada usuário pode ter apenas uma receita
+3. **Pagamentos**: Só podem ser processados se houver receita suficiente
+4. **Dedução**: Pagamentos deduzem automaticamente da receita do usuário
+5. **Status**: Despesas mudam de status conforme pagamentos são feitos
+
+## 🚨 Códigos de Erro
+
+- `400` - Dados inválidos ou erro de validação
+- `401` - Não autenticado
+- `403` - Token inválido ou expirado
+- `404` - Recurso não encontrado
+- `500` - Erro interno do servidor
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 📞 Suporte
+
+Para suporte, abra uma issue no repositório ou entre em contato através do email de suporte.
+
+---
+
+**Desenvolvido com ❤️ para facilitar o controle financeiro doméstico**
