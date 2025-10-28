@@ -45,12 +45,19 @@ app.get('/', (req, res) => {
         message: 'API de Gestão de Gastos Domésticos',
         version: '1.0.0',
         documentation: '/api-docs',
+        dashboard: '/api/dashboard',
         endpoints: {
             health: '/api/health',
             users: '/api/users',
             expenses: '/api/expenses',
             revenues: '/api/revenues',
-            payments: '/api/payments'
+            payments: '/api/payments',
+            dashboard: '/api/dashboard'
+        },
+        quickAccess: {
+            '📊 Dashboard Visual': '/api/dashboard',
+            '📚 Documentação API': '/api-docs',
+            '🔍 Health Check': '/api/health'
         }
     });
 });
@@ -83,9 +90,11 @@ app.use((error, req, res, next) => {
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
-    console.log(`📚 Documentação disponível em: http://localhost:${PORT}/api-docs`);
-    console.log(`🔍 Health check em: http://localhost:${PORT}/api/health`);
+    console.log(`📊 Dashboard Visual: http://localhost:${PORT}/api/dashboard`);
+    console.log(`📚 Documentação API: http://localhost:${PORT}/api-docs`);
+    console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
     console.log(`📊 API base URL: http://localhost:${PORT}/api`);
+    console.log(`\n💡 Dica: Acesse o dashboard para uma interface visual completa!`);
 });
 
 module.exports = app;
