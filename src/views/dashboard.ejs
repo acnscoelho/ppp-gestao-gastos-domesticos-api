@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-chart-pie me-2"></i>Dashboard Financeiro
+            </span>
+            <div class="d-flex">
+                <span class="text-light me-3">
+                    <i class="fas fa-calendar me-1"></i>
+                    <%= currentDate %> - <%= currentTime %>
+                </span>
+                <a href="/api-docs" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-book me-1"></i>API Docs
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Cards de Resumo -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total de Despesas</h6>
+                                <h3>R$ <%= financialSummary.totalExpenses.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></h3>
+                            </div>
+                            <i class="fas fa-credit-card fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total Pago</h6>
+                                <h3>R$ <%= financialSummary.totalPaid.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></h3>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total a Pagar</h6>
+                                <h3>R$ <%= financialSummary.totalToPay.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></h3>
+                            </div>
+                            <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card <%= financialSummary.finalSituation >= 0 ? 'bg-success' : 'bg-danger' %> text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Situação Final</h6>
+                                <h3>R$ <%= financialSummary.finalSituation.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></h3>
+                            </div>
+                            <i class="fas fa-balance-scale fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Distribuição de Despesas</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="expensesChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Status dos Pagamentos</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="paymentsChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Despesas -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Detalhamento das Despesas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Categoria</th>
+                                        <th>Valor Total</th>
+                                        <th>Valor Pago</th>
+                                        <th>Valor Restante</th>
+                                        <th>Status</th>
+                                        <th>Progresso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% expensesTable.forEach(expense => { %>
+                                    <tr>
+                                        <td><%= expense.name %></td>
+                                        <td>
+                                            <span class="badge bg-<%= expense.type === 'Fixa' ? 'primary' : 'info' %>">
+                                                <%= expense.category %>
+                                            </span>
+                                        </td>
+                                        <td>R$ <%= expense.value.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></td>
+                                        <td>R$ <%= expense.paidValue.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></td>
+                                        <td>R$ <%= expense.remainingValue.toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></td>
+                                        <td>
+                                            <span class="badge bg-<%= expense.status === 'Pago' ? 'success' : expense.status === 'OK' ? 'warning' : 'danger' %>">
+                                                <%= expense.status %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="progress" style="width: 100px;">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: <%= (expense.paidValue / expense.value * 100) %>%"
+                                                     aria-valuenow="<%= (expense.paidValue / expense.value * 100) %>" 
+                                                     aria-valuemin="0" aria-valuemax="100">
+                                                    <%= Math.round(expense.paidValue / expense.value * 100) %>%
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dados para os gráficos
+        const chartData = <%- JSON.stringify(chartData) %>;
+        
+        // Gráfico de Pizza - Distribuição de Despesas
+        const expensesCtx = document.getElementById('expensesChart').getContext('2d');
+        new Chart(expensesCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Despesas Fixas', 'Despesas Variáveis'],
+                datasets: [{
+                    data: [chartData.expenses.fixed, chartData.expenses.variable],
+                    backgroundColor: ['#007bff', '#17a2b8'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Barras - Status dos Pagamentos
+        const paymentsCtx = document.getElementById('paymentsChart').getContext('2d');
+        new Chart(paymentsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Total', 'Pago', 'Restante'],
+                datasets: [{
+                    label: 'Valores (R$)',
+                    data: [chartData.payments.total, chartData.payments.paid, chartData.payments.remaining],
+                    backgroundColor: ['#6c757d', '#28a745', '#ffc107'],
+                    borderWidth: 1,
+                    borderColor: '#000'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Atualizar dados a cada 30 segundos
+        setInterval(async () => {
+            try {
+                const response = await fetch('/api/dashboard/data');
+                const data = await response.json();
+                if (data.success) {
+                    // Aqui você pode atualizar os dados sem recarregar a página
+                    console.log('Dados atualizados:', data.data);
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar dados:', error);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
