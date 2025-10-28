@@ -15,9 +15,16 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 app.use(cors());
 
+// Configurar EJS como template engine
+app.set('view engine', 'ejs');
+app.set('views', './src/views');
+
 // Middleware para parsing de JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Middleware para servir arquivos estáticos
+app.use(express.static('public'));
 
 // Middleware de logging (opcional)
 app.use((req, res, next) => {

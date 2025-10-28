@@ -10,12 +10,16 @@ Uma API Rest completa para gerenciar gastos domésticos mensais, incluindo despe
 - **Receitas**: Controle de receitas por usuário
 - **Pagamentos**: Processamento de pagamentos com dedução automática da receita
 - **Relatórios**: Resumos financeiros e estatísticas
+- **Dashboard**: Interface visual com gráficos e tabelas interativas
 - **Documentação**: Swagger UI integrado
 
 ## 🚀 Tecnologias Utilizadas
 
 - **Node.js** - Runtime JavaScript
 - **Express.js** - Framework web
+- **EJS** - Template engine para views
+- **Bootstrap** - Framework CSS responsivo
+- **Chart.js** - Gráficos interativos
 - **JWT** - Autenticação por token
 - **bcryptjs** - Criptografia de senhas
 - **Swagger** - Documentação da API
@@ -52,7 +56,14 @@ src/
 │   ├── ExpenseService.js   # Lógica de negócio de despesas
 │   ├── RevenueService.js   # Lógica de negócio de receitas
 │   └── PaymentService.js   # Lógica de negócio de pagamentos
+├── views/
+│   ├── dashboard.ejs       # Template do dashboard
+│   └── error.ejs           # Template de erro
 └── server.js               # Servidor principal
+
+public/
+└── css/
+    └── dashboard.css       # Estilos do dashboard
 
 resources/
 └── swagger.json            # Documentação Swagger
@@ -96,6 +107,10 @@ A documentação completa da API está disponível através do Swagger UI:
 - **URL**: `http://localhost:3000/api-docs`
 - **Formato**: Swagger/OpenAPI 3.0
 
+### Dashboard Visual
+- **URL**: `http://localhost:3000/api/dashboard`
+- **Funcionalidades**: Gráficos interativos, tabelas de despesas, resumos financeiros
+
 ## 🔗 Endpoints Principais
 
 ### Autenticação
@@ -130,6 +145,10 @@ A documentação completa da API está disponível através do Swagger UI:
 
 ### Relatórios
 - `GET /api/expenses/summary` - Resumo financeiro completo
+
+### Dashboard
+- `GET /api/dashboard` - Interface visual do dashboard
+- `GET /api/dashboard/data` - Dados do dashboard em JSON
 
 ## 🔐 Autenticação
 
@@ -204,6 +223,16 @@ curl -X POST http://localhost:3000/api/expenses/payment \
 
 ```bash
 curl -X GET http://localhost:3000/api/expenses/summary
+```
+
+### 6. Acessar dashboard visual
+
+```bash
+# Abrir no navegador
+http://localhost:3000/api/dashboard
+
+# Ou obter dados via API
+curl -X GET http://localhost:3000/api/dashboard/data
 ```
 
 ## 📊 Estrutura de Dados
