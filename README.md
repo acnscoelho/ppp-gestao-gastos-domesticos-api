@@ -694,32 +694,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
   "description": "Pagamento do aluguel",
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
-```
-
----
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Para contribuir:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. Push para a branch (`git push origin feature/MinhaFeature`)
-5. Abra um Pull Request
-
-### Padrões de Commit
-
-```
-feat: Nova funcionalidade
-fix: Correção de bug
-docs: Atualização de documentação
-test: Adição ou correção de testes
-refactor: Refatoração de código
-style: Formatação de código
-ci: Alterações no CI/CD
-```
-
 ---
 
 ## 📄 Licença
