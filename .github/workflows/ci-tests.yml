@@ -29,14 +29,21 @@ jobs:
 
       - name: Iniciar servidor da API
         run: npm start &
+        env:
+          PORT: 3000
 
       - name: Aguardar API iniciar
-        run: sleep 10
+        run: sleep 15
+
+      - name: Verificar se API está rodando
+        run: |
+          curl http://localhost:3000/api || echo "❌ API não respondeu"
 
       - name: Executar testes de API
         run: npm test
         env:
           NODE_ENV: test
+          BASE_URL: http://localhost:3000/api
 
       - name: Upload do relatório Mochawesome
         if: always()
@@ -74,7 +81,7 @@ jobs:
       - name: Criar usuário de teste
         run: |
           npm start &
-          sleep 5
+          sleep 10
           curl -X POST http://localhost:3000/api/users/register \
             -H "Content-Type: application/json" \
             -d '{"name":"Performance Test","email":"performance@test.com","password":"123456"}'
