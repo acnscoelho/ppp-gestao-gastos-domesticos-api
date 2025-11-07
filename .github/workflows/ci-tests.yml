@@ -1,13 +1,6 @@
 name: API Gestão Gastos Domésticos - Tests
 
 'on':
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-    branches:
-      - main
   workflow_dispatch: null
 
 jobs:
