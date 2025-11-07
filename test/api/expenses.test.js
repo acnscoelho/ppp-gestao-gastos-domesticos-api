@@ -1,10 +1,10 @@
 const request = require('supertest');
 const { expect } = require('chai');
 require('dotenv').config()
-const { obterToken } = require('../helpers/autenticacao')
+const { obterToken } = require('../../helpers/autenticacao')
 
 
-describe('Revenues /revenues', () => {
+describe('Expenses /expenses/fixed', () => {
 
     let usuarioCriado = {
         name: '',
@@ -15,8 +15,8 @@ describe('Revenues /revenues', () => {
 
     before(async () => {
         const timestamp = Date.now();
-        usuarioCriado.name = `UserRevenues${timestamp}`;
-        usuarioCriado.email = `revenues${timestamp}@gmail.com`;
+        usuarioCriado.name = `UserExpenses${timestamp}`;
+        usuarioCriado.email = `expenses${timestamp}@gmail.com`;
 
         const resposta = await request(process.env.BASE_URL)
             .post('/users/register')
@@ -30,67 +30,55 @@ describe('Revenues /revenues', () => {
         usuarioCriado.token = resposta.body.data.token;
     })
 
-describe('POST /revenues', async () => {
-    it('Deve retornar 201 quando o usuário realizar o cadastro da receita', async () => {
+describe('POST /expenses/fixed', async () => {
+    it('Deve retornar 201 quando o usuário realizar o cadastro de despesas fixas', async () => {
         const resposta = await request(process.env.BASE_URL)
-            .post('/revenues')
+            .post('/expenses/fixed')
             .set('Authorization', `Bearer ${usuarioCriado.token}`)
             .set('Content-Type', 'application/json')
             .send({
-                'currentValue': 2000
+                'name': 'Carro',
+                'value': 1000,   
             })   
 
         expect(resposta.status).to.equal(201);
-        expect(resposta.body.message).to.equal('Receita criada com sucesso');        
+        expect(resposta.body.message).to.equal('Despesa fixa criada com sucesso');        
     })
 
-    it('Deve retornar 400 quando o usuário já tem uma receita cadastrada', async () => {
+    it('Deve retornar 400 quando tentar registrar despesa fixa com campos obrigatórios ausentes', async () => {
         const resposta = await request(process.env.BASE_URL)
-            .post('/revenues')
+            .post('/expenses/fixed')
             .set('Authorization', `Bearer ${usuarioCriado.token}`)
             .set('Content-Type', 'application/json')
             .send({
-                'currentValue': 2500
+                'name': '',
+                'value': ''
             })
         expect(resposta.status).to.equal(400);
-        expect(resposta.body.message).to.equal('Usuário já possui receita registrada. Use a atualização para modificar.');
+        expect(resposta.body.message).to.equal('Campos obrigatórios: name, value');
     })
 
-    it('Deve retornar 400 quando o usuário tentar criar uma receita com valor negativo', async () => {
+    it('Deve retornar 400 quando tentar registrar despesa fixa com valor negativo', async () => {
         const resposta = await request(process.env.BASE_URL)
-            .post('/revenues')
+            .post('/expenses/fixed')
             .set('Authorization', `Bearer ${usuarioCriado.token}`)
             .set('Content-Type', 'application/json')
             .send({
-                'currentValue': -100
+                'name': 'Condomínio',
+                'value': -1500
             })
         expect(resposta.status).to.equal(400);
-        expect(resposta.body.message).to.equal('Valor atual deve ser um número válido maior ou igual a zero');
+        expect(resposta.body.message).to.equal('Valor deve ser um número válido maior ou igual a zero');
     })
 })
 
-describe('GET /revenues', async () => {
-    it('Deve retornar 200 e exibir a receita com todos os campos quando o usuário autenticado visualizar sua receita', async () => {
+describe('GET /expenses/fixed', async () => {
+    it('Deve retornar 200 quando for exibida a lista de despesas fixas', async () => {
         const resposta = await request(process.env.BASE_URL)
-            .get('/revenues')
-            .set('Authorization', `Bearer ${usuarioCriado.token}`)
+            .get('/expenses/fixed')
             .set('Content-Type', 'application/json')
-
-
         expect(resposta.status).to.equal(200);
-        expect(resposta.body.data).to.exists;
-
-        expect(resposta.body.data).to.include.all.keys(
-            'currentValue', 
-            'previousValue', 
-            'usedValue', 
-            'availableValue'
-        );
-        expect(resposta.body.data.currentValue).to.equal(2000);
-        expect(resposta.body.data.previousValue).to.equal(0);
-        expect(resposta.body.data.usedValue).to.be.a('number');
-        expect(resposta.body.data.availableValue).to.be.a('number');
-    })
+        })
 })    
 
     after(async () => {
