@@ -44,10 +44,11 @@ Este projeto é uma **API REST** desenvolvida para gerenciar finanças doméstic
 - ✅ **34+ User Stories** documentadas
 - ✅ **7 Épicos** completos
 - ✅ **85+ páginas** de documentação na Wiki
-- ✅ **Testes Automatizados** (API + Performance)
+- ✅ **Estratégia VADER** - Testes exploratórios manuais
+- ✅ **22 Testes Automatizados** (API)
+- ✅ **Testes de Performance** (JMeter)
 - ✅ **Pipeline CI/CD** com GitHub Actions
-- ✅ **Monitoramento** com New Relic
-- ✅ **Estratégia VADER** para testes exploratórios
+- ✅ **Monitoramento APM** com New Relic
 
 ---
 
@@ -253,30 +254,44 @@ npm start
 
 ## 🧪 Testes
 
-### Testes Automatizados de API
+### Estratégia de Testes
 
-O projeto possui **cobertura completa** de testes para todos os endpoints:
+O projeto utiliza uma **abordagem híbrida** de testes:
+
+#### 🔍 **Testes Exploratórios (VADER)**
+Testes manuais baseados na heurística **VADER** usando Postman e Swagger:
+- **V**erbs - Testes de verbos HTTP
+- **A**uthorization/Authentication - Validação de autenticação JWT
+- **D**ata - Validação de dados e payloads
+- **E**rrors - Tratamento de erros e edge cases
+- **R**esponsiveness - Tempo de resposta
+
+📚 **Documentação completa**: [Wiki - Plano de Testes VADER](https://github.com/acnscoelho/ppp-gestao-gastos-domesticos-api/wiki/Plano-e-Estratégia-de-Testes-Adaptada)
+
+#### 🤖 **Testes Automatizados**
+
+Casos de teste selecionados foram automatizados usando **Mocha + Chai + Supertest**:
 
 ```bash
-# Executar todos os testes
+# Executar todos os testes automatizados
 npm test
 
 # Executar com relatório Mochawesome
 npm test -- --reporter mochawesome
 ```
 
-#### Cobertura de Testes
+**Cenários Automatizados:**
 
-| Módulo | Testes | Status |
+| Módulo | Cenários Automatizados | Status |
 |--------|--------|--------|
 | **Users** | 8 cenários | ✅ Passing |
-| **Expenses Fixed** | 10 cenários | ✅ Passing |
-| **Expenses Variable** | 8 cenários | ✅ Passing |
-| **Revenues** | 10 cenários | ✅ Passing |
-| **Payments** | 12 cenários | ✅ Passing |
-| **Payment History** | 6 cenários | ✅ Passing |
+| **Expenses Fixed** | 4 cenários | ✅ Passing |
+| **Expenses Variable** | 3 cenários | ✅ Passing |
+| **Revenues** | 4 cenários | ✅ Passing |
+| **Payments** | 2 cenários | ✅ Passing |
+| **Payment History** | 1 cenário | ✅ Passing |
 
-**Total: 54+ cenários de teste automatizados**
+**Total: 22 cenários automatizados** + Testes manuais exploratórios completos
 
 ### Testes de Performance (JMeter)
 
