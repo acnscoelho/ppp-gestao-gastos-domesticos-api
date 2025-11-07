@@ -47,24 +47,7 @@ Deve aparecer a versão do JMeter instalada.
 
 ## 🚀 Como Executar
 
-### Opção 1: Via Script (Modo Automático) ⚡
-
-1. **Inicie a API** (em outro terminal):
-   ```bash
-   npm start
-   ```
-
-2. **Execute o script de teste**:
-   ```bash
-   cd test/performance/scripts
-   run-login-test.bat
-   ```
-
-3. O relatório HTML será gerado automaticamente em: `test/performance/results/html-report/index.html`
-
----
-
-### Opção 2: Via Interface Gráfica do JMeter 🖥️
+### Opção 1: Via Interface Gráfica do JMeter 🖥️ (Recomendado)
 
 1. **Abra o JMeter**:
    ```bash
@@ -86,12 +69,14 @@ Deve aparecer a versão do JMeter instalada.
    - Aguarde a conclusão
 
 5. **Veja os resultados**:
-   - View Results Tree: Ver cada requisição
-   - Summary Report: Estatísticas gerais
+   - Adicione listeners temporariamente se quiser visualizar:
+     - View Results Tree: Ver cada requisição
+     - Summary Report: Estatísticas gerais
+   - **Nota**: Remova os listeners antes de usar em CI/CD
 
 ---
 
-### Opção 3: Via Linha de Comando (CI/CD) 🤖
+### Opção 2: Via Linha de Comando (CI/CD) 🤖
 
 ```bash
 # Navegar até a pasta do projeto
@@ -171,13 +156,13 @@ No Test Plan, altere:
 ```
 test/performance/
 ├── jmeter/
-│   └── login-performance-test.jmx    # Test Plan do JMeter
-├── scripts/
-│   └── run-login-test.bat            # Script de execução automática
+│   └── login-performance-test.jmx    # Test Plan do JMeter (sem listeners)
 ├── results/
-│   ├── login-test-results.jtl        # Resultados em formato JTL
-│   └── html-report/                  # Relatório HTML
+│   ├── .gitkeep                      # Mantém pasta no Git
+│   ├── login-test-results.jtl        # Resultados em formato JTL (gerados)
+│   └── html-report/                  # Relatório HTML (gerado)
 │       └── index.html
+├── .gitignore                         # Ignora arquivos de resultado
 └── README.md                          # Esta documentação
 ```
 
