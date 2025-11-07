@@ -1,3 +1,9 @@
+// Carregar variáveis de ambiente PRIMEIRO
+require('dotenv').config();
+
+// New Relic deve vir depois do dotenv
+require('newrelic');
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
