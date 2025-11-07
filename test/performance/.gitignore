@@ -1,0 +1,9 @@
+# Ignorar resultados dos testes de performance
+results/*.jtl
+results/html-report/
+results/*.csv
+results/*.xml
+
+# Manter a pasta results vazia
+!results/.gitkeep
+
