@@ -694,9 +694,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
   "description": "Pagamento do aluguel",
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
+```
+
 ---
 
 ## 📄 Licença
+
 
 Este projeto está sob a licença **MIT**.
 
