@@ -712,7 +712,7 @@ Este projeto está sob a licença **MIT**.
 **Ana Cláudia Coelho**
 
 [![GitHub](https://img.shields.io/badge/GitHub-acnscoelho-181717?style=flat&logo=github)](https://github.com/acnscoelho)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ana_Cláudia_Coelho-0A66C2?style=flat&logo=linkedin)](www.linkedin.com/in/ana-claudia-coelho)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ana_Cláudia_Coelho-0A66C2?style=flat&logo=linkedin)]([https://www.linkedin.com/in/ana-claudia-coelho])
 
 ---
 
