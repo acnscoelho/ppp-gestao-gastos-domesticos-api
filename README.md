@@ -718,7 +718,7 @@ Este projeto está sob a licença **MIT**.
 
 🌸 **Projeto desenvolvido durante a Mentoria 2.0 de Júlio de Lima**
 
-[![Mentoria](https://img.shields.io/badge/Mentoria-QA_Júlio_de_Lima-FF6B6B?style=flat)](https://juliode-lima.com)
+[![Mentoria](https://img.shields.io/badge/Mentoria-QA_Júlio_de_Lima-FF6B6B?style=flat)](https://mentoria.juliodelima.com.br/)
 
 ---
 
